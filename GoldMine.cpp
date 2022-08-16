@@ -29,3 +29,5 @@ int main(){
     cout << getMaxGold(a, n, m) << endl; 
     return 0;  
 }
+
+printf("%f\n", );
