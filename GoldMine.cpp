@@ -1,33 +1,53 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int getMaxGold(vector<vector<int>> a, int n, int m) {
-    vector<vector<int>> dp(n+1,vector<int>(m));
-    for(int i = 0; i<m; i++) dp[i][0] = a[i][0]; 
+pair<int,pair<int,int>> getMaxGold(vector<vector<int>> a, int row, int col) {
+    vector<vector<int>> dp(row,vector<int>(col));
+    for(int i = 0; i<row; i++) dp[i][0] = a[i][0];
     int rightUp, right, rightDown;
-    for(int i = 1; i<m; i++) {
-        for(int j = 0; j<n; j++) {
-            rightUp = (j==0 ? 0: dp[j-1][i-1]); 
-            rightDown = (j==n-1 ? 0: dp[j+1][i-1]);
-            right =  dp[j][i-1]; 
-            dp[j][i] = a[j][i] + max(rightUp, max(right, rightDown)); 
+    for(int i = 1; i<col; i++) {
+        for(int j = 0; j<row; j++) {
+            rightUp = (j==0 ? 0: dp[j-1][i-1]);
+            rightDown = (j==row-1 ? 0: dp[j+1][i-1]);
+            right =  dp[j][i-1];
+            dp[j][i] = a[j][i] + max(rightUp, max(right, rightDown));
         }
     }
-    int mx = dp[0][m-1];
-    for(int i  = 0; i<n; i++) {
-        mx = max( mx, dp[i][m-1]); 
+    int mxGold = dp[0][col-1];
+    pair<int,int> mxPosition = {1, col};
+    for(int i  = 0; i<row; i++) {
+        if( mxGold < dp[i][col-1]) {
+            mxGold = dp[i][col-1];
+            mxPosition = {i+1, col};
+        }
     }
-    return mx; 
+    return {mxGold, mxPosition};
 }
 
 int main(){
-    std::vector<std::vector<int>> a = {{1, 3, 1, 5}, 
-                                        {2, 2, 4, 1},
-                                        {5, 0, 2, 3},
-                                        {0, 6, 1, 2}};
-    int n = a.size(), m = a[0].size(); 
-    cout << getMaxGold(a, n, m) << endl; 
-    return 0;  
+    int row, col;
+    cout << "Enter the number of row: " << endl;
+    cin >> row;
+    cout << "Enter the number of column: " << endl;
+    cin >> col;
+    cout << endl;
+    std::vector<vector<int>> gold(row,vector<int>(col));
+    cout << "Enter the gold value: " << endl; 
+    for(auto& i: gold) {
+        for(int& j: i ) {
+            cin >> j;
+        }
+    }
+    auto ans = getMaxGold(gold, row, col);
+    int mxGold = ans.first;
+    pair<int,int> mxGoldPos = ans.second;
+    cout << "Maximum amount of gold can be collect from GoldMine table is: " <<  mxGold << " Units" << endl;
+    cout <<"Maximum amount of Gold position is : [" << mxGoldPos.first << " " << mxGoldPos.second << "]" << endl;
+    return 0;
 }
 
-printf("%f\n", );
+/*4 4
+1 3 1 5 
+2 2 4 1 
+5 0 2 3 
+0 6 1 2*/ 
