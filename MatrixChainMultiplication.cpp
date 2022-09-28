@@ -2,7 +2,7 @@
 using namespace std;
 
 vector<vector<int>> matrixChain(vector<int> &p, int n){
-    vector<vector<int>> m(n, vector<int>(n));
+    vector<vector<int>> m(n, vector<int>(n)), s(n,vector<int>(n));
     for(int l = 1; l<n; l++){
         for(int i = 1; i<=n-l; i++){
             int j = i + l - 1;
@@ -15,16 +15,24 @@ vector<vector<int>> matrixChain(vector<int> &p, int n){
                     int mn = m[i][k] + m[k+1][j] + (p[i-1]*p[k]*p[j]);
                     if (mn < m[i][j]) {
                         m[i][j] = mn;
+                        s[i][j] = k; 
                     }
                 }
             }
         }
     }
+    for(int i = 0; i<n; i++){
+        for(int j = 0; j<n; j++){
+            cout << s[i][j] << " ";
+        }
+        cout << endl;
+    }
+    cout << endl;
     return m;
 }
 
 int main(){
-    std::vector<int> p = {4, 10, 3, 12, 20, 7};
+    std::vector<int> p =  {4, 10, 3, 12, 20, 7};
     int n = p.size();
     auto m = matrixChain(p, n);
     cout << "M table: " << endl;
